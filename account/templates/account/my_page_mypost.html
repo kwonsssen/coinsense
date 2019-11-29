@@ -1,0 +1,63 @@
+
+{% load static%}
+<div style="margin-top: 20px;" class="my_page_sub_div3">
+	<h3>내가 작성한 게시글</h3>
+	<table class="table table-striped" style="border-top: 5px solid #444444;border-bottom: 5px solid #444444;margin-top: 20px;">
+		<thead>
+			<tr>
+				<th style="width: 500px;" scope="row">게시판</th>
+				<th style="width: 2000px;" scope="row">제목</th>
+				<th style="width: 1000px;" scope="row">작성일시</th>
+				<th scope="row">조회수</th>
+				<th scope="row">좋아요</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for post in post_list%}
+			<tr>
+				<td scope="row">{{post.get_board_name}}</th>
+				<td><a style="color:black" href="{{post.get_absolute_url}}">{{post}}</a></td> <!--|truncatechars:20-->
+				<td>{{post.created_at}}</td>
+				<td>{{post.views}}</td>
+				<td>{{post.like_count}}</td>
+			</tr>
+			{% endfor %}	
+		</tbody>
+	</table>
+</div>
+<div style="width:800px;">
+		<div style="display: table; margin-left: auto; margin-right: auto;padding-top: 3%;">
+			<div class='col-log-12'>
+				<ul class="pagination pagination-lg col-lg-12 col-md-12" style="margin-left: 20px;">
+				  {% if post_list.has_previous %}
+				  <li>
+					<a class="page_has"style="color:black" name="{{ post_list.previous_page_number }}" href="{% url 'account:my_write'%}" aria-label="Previous">
+					  이전&ensp;
+					</a>
+				  </li>
+				  {% else %}
+		  
+				  {% endif %}
+		  
+				  {% for i in post_list.paginator.page_range %}
+				  <!--현재페이지-->
+					{% if post_list.number == i %}
+					  <li class="active" style="font-size: 20px;line-height: 25px;"><a style="color:black" href="#"><b>&ensp;{{i}}&ensp;</b></a></li>
+					{% else %}
+					  <li><a class="page_choice" style="color:black" href="{% url 'account:my_write'%}">&ensp;{{i}}&ensp;</a></li>
+					{% endif %}
+				  {% endfor %}
+				  
+				  {% if post_list.has_next %}
+					<li><a  class="page_has" style="color:black" name="{{ post_list.next_page_number }}"href="{% url 'account:my_write' %}" aria-label="Next">&ensp;다음</i></a></li>
+				  {% else %}  
+		  
+				  {% endif %}
+				  </ul><!--/.pagination-->
+			</div>
+		</div>
+		<form action="" method="get">
+			<input style="width:300px;margin-top: 20px;margin-left: 240px;border: 1px solid #383838;" type="text" name="search" value="{{ q }}">
+			<input style="background-color: #F4F4F7;border: 1px solid #383838;"type="submit" value="검색">
+		</form>
+	</div>

@@ -1,0 +1,286 @@
+{% extends "layout.html" %}
+
+{% load static %}
+
+{% block script%}
+    <script>
+        function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+    </script>
+    <script type="text/javascript">
+        $(function(){
+            $('.notify').click(function(){
+                alert('신고가 접수되었습니다.'); 
+            });
+        });
+    </script>
+    <script type="text/javascript" src="{% static 'Like_Ajax.js' %}"></script>
+    <script type="text/javascript" src="{% static 'DisLike_Ajax.js' %}"></script>
+    <script type="text/javascript" src="{% static 'Comment.js' %}"></script>
+    
+    <!--이미지 삭제-->
+    <script type="text/javascript">
+        var imgTag = $('#summernote-board').children('p').children('img');
+        var imgSrc = [];
+        $.each(imgTag, function (i,v){
+            imgSrc.push($(v).attr("src"));
+        });
+        let srcJson = JSON.stringify(imgSrc);
+        console.log(srcJson)
+        $(document).on('click','#board-destroy-button', function(e){
+            e.stopPropagation(); // 같은 영역에 속해있는 중복 클릭 방지 
+            e.preventDefault();  // 이벤트 진행 중지 
+            var pk = $(this).attr('name');
+            var url = $(this).attr('href');
+            var csrf = getCookie("csrftoken");
+            //---start ajax
+            $.ajax({ 
+                type: "POST", 
+                url: url, 
+                data: {
+                    'csrfmiddlewaretoken': csrf,
+                    'pk': pk,
+                    'imgSrc':srcJson,
+                }, 
+                dataType: "json", 
+
+                success: function(response){ // 통신 성공시 - 좋아요 갯수 변경, 유저 목록 변경
+                    let redirect = "http://"+window.location.host+response
+                    $(location).attr('href',redirect);
+                },
+                error: function(request, status, error){ // 통신 실패시 
+
+                },
+            });
+            //---end ajax
+        });
+    </script>
+    <!--이미지삭제 끝-->
+{% endblock script %}
+
+{% block content %}
+<style type="text/css">
+    label{
+        margin-right: 10px;
+    }
+    #id_content{
+        width: 90%;
+    }
+</style>
+<script type="text/javascript">
+$('#myModal').on('shown.bs.modal', function () {
+  $('#myInput').trigger('focus')
+})
+</script>
+
+<div class="free_board" style="padding-top: 10px;margin-bottom: 20px;">
+    <h5><b>{{boardtitle}}</b></h5>
+    <div class="free_board_sub">
+        <h6 class="board_title">{{ post.title }}</h6>
+        {% if post.author == request.user %}
+            <a href="{% url update_url post.id %}"><button class="button">수정</button></a>
+            <!--모달을 띄운다-->
+            <button type="button" class="button" data-toggle="modal" data-target="#exampleModalLong">
+                삭제
+            </button>
+        {% endif %}
+        <hr style="clear: both;">
+
+        <img style="width:60px;height: 60px;float: left;" 
+        {% if post.user.Photo %} src="{{post.user.Photo.url}}"  
+        {% else %} src="{% static 'no-screenshot.jpg' %}"
+        {%endif%}
+        >
+        <p style="float: left;">&ensp;{{ post.user.nickname }}</p>
+        <p style="float: right;">https://coinsense.com{{ request.path }}</p>
+        {% if post.photo %}
+        <img src="{{post.photo.url}}" alt="">
+        {% endif %}
+        <br>
+            <div id="summernote-board"style="clear:both;margin-top: 50px;">{{ post.summer_field|safe }}</div>
+        <br>
+        <br>
+        <br>
+        <div style="display: table; margin: 0 auto;width:400px;margin-bottom: 20px;">
+            
+            <form style="float:left;margin-right: 10px;margin-left: 50px;" action="" method="post" >
+                <input id="like{{post.id}}"class="like" style="cursor: pointer;width:75px;height: 25px;font-size: 14px;background-color: #F4F4F7;border: 1px solid black;" type="submit" name="{{post.id}}" href="{{like_url}}" value="추천 {{like_count}}">
+            </form>
+            <!--//end 좋아요-->
+
+            <!--싫어요-->
+            <form style="float:left;margin-right: 10px;" action="" method="post" >
+                <input class="dislike" style="cursor: pointer;width:75px;height: 25px;font-size: 14px;background-color: #F4F4F7;border: 1px solid black;" type="submit" name="{{post.id}}" href="{{dislike_url}}" value="비추천 {{dislike_count}}">
+            </form>
+            <!--//end 싫어요-->
+            <form style="float:left;margin-right: 10px;" action="" method="post" >
+                <input class="book-mark"" style="cursor: pointer;width:75px;height: 25px;font-size: 14px;background-color: #F4F4F7;border: 1px solid black;" type="submit" name="{{post.id}}" href="{{ bookmark_url}}" value="찜 등록">
+            </form>
+            <!--신고-->
+
+                <input style="width:45px;height: 25px;font-size: 14px;background-color: #F4F4F7;border: 1px solid black;" type="button" id="like" data-toggle="modal" data-target="#exampleModal" value="신고">
+
+            <!--//end신고-->
+            
+
+            <!--신고하기 Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">허위 신고시 제재를 받을 수 있습니다</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                        <form method="post" action="">
+                            <div class="input_title" style="float: left !important;">
+                                {% csrf_token %}
+                            </div>
+                            
+                            <div class="input_content">
+                                <input type="hidden" name="like" value="{{ post_list.pk }}">
+                                <input type="hidden" name="like_post" value="{{ post_list.post }}">
+                                {{ notify_form }}
+                                
+                            </div>
+                        
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                    <button type="submit" class="btn btn-primary notify">신고하기</button>
+                  </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+        </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div>
+    <div class="comment">
+        {% for comment in comments %}
+        <div style="float: left;margin-top: 10px;">
+            <img style="width:50px;height: 50px;" 
+            {% if request.user.Photo %} src="{{request.user.Photo.url}}"  
+            {% else %} src="{% static 'no-screenshot.jpg' %}"
+            {%endif%}
+            >
+            <strong>{{ comment.author }}</strong>
+            <div class="date">
+                {{ comment.created_date }}
+            </div>
+            <p>{{ comment.text|linebreaks }}</p>
+        </div>
+
+        {% if comment.user == users %}
+        <!--댓글삭제 버튼-->
+        <button type="button" class="button" style="margin-left: 580px;margin-top: 50px;" data-toggle="modal" data-target="#exampleModalLong2">
+            삭제
+        </button>
+        <!--댓글삭제 버튼 끝-->
+
+        <!-- 댓글삭제 Modal -->
+        <div class="modal fade" id="exampleModalLong2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                      댓글을 삭제하시겠습니까?
+                  </div>
+                  <div class="modal-footer">
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        <input id="comment-destroy-button" class="destroy btn btn-primary"  value="삭제">
+                    </form>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                  </div>
+                </div>
+            </div>
+        </div>
+        <!--댓글삭제 모달 끝-->
+
+        {% endif %}     
+        <hr style="clear:both;width: 800px;margin-left: 0px;">
+        {% empty %}
+        {% endfor %}        
+    </div>
+    
+        <!--<p>댓글이 없습니다.</p>-->
+   
+
+    {% if not user.is_authenticated %}
+    {%else%}
+    <form method="POST" class="post-form">
+        <span style="float: left;padding-left: 0px;">{{ comment_form.text }}</span>
+        <input class="commit" style="width:120px;height: 40px;background-color: #F4F4F7;border: 1px solid gray;cursor:pointer;" type="submit" name="{{ post.id }}" href="{{comment_url}}"value="등록">
+    </form>
+    {%endif%}
+</div>
+
+
+
+
+<!-- Button trigger modal -->
+
+
+<!-- 게시글 삭제 모달 -->
+<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          게시글을 삭제하시겠습니까?
+      </div>
+      <div class="modal-footer">
+            <input id="board-destroy-button" class="destroy btn btn-primary" href="{% url destroy_url %}" name="{{post.pk}}" type="submit" value="삭제">
+        </form>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--게시글삭제 모달 끝-->
+
+
+<div style="margin-top: 50px;">
+       
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+<!-- ############################################################################# -->
+{% endblock %}
+
+
+
+<!--------------------------------------------->

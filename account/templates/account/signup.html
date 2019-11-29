@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>CoinSense-회원가입</title>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
+</head>
+<body>
+	<form action="" method="post" enctype="multipart/form-data">
+		{% csrf_token %}
+	 	<div class="form-group">
+	 	  <label class="text text-id" for="exampleInputEmail1"><b>아이디 : &emsp;&emsp;&emsp;</b></label>
+	 	  <div class="form-id">{{ form.username }}</div>
+	 	  {% for error in form.username.errors %}
+				<p>{{ error }}</p>
+			{% endfor %}
+	 	</div>
+	 	<div class="form-group">
+	 	  <label class="text" for="exampleInputPassword1"><b>비밀번호 : &emsp;&emsp;</b></label>
+			 <div class="form-pw1">{{ form.password }}</div>
+			 {% for error in form.password.errors %}
+				<p>{{ error }}</p>
+				{% endfor %}
+	 	</div>
+	 	<div class="form-group">
+	 	  <label class="text" for="exampleInputPassword1"><b>비밀번호 확인 : </b></label>
+			 <div class="form-pw2">{{ form.password2 }}</div>
+			 {% for error in form.password2.errors %}
+				<p>{{ error }}</p>
+				{% endfor %}
+	 	</div>
+	 	<div class="form-group">
+	 	  <label class="text"><b>닉네임 : &emsp;&emsp;&emsp;</b></label>
+			 <div class="form-name">{{ form.nickname }}</div>
+			 {% for error in form.nickname.errors %}
+				<p>{{ error }}</p>
+				{% endfor %}
+	 	</div>
+	 	<div class="form-group">
+	 	  <label class="text"><b>
+	 	  이메일 : &emsp;&emsp;&emsp;</b></label>
+			 <div class="form-name">{{ form.email }}</div>
+			 {% for error in form.email.errors %}
+				<p>{{ error }}</p>
+				{% endfor %}
+	 	</div>
+	 	<div class="form-group">
+	 	  <label class="text"><b>
+	 	  주소 : &emsp;&emsp;&emsp;</b></label>
+			 <div class="form-name">{{ form.address }}</div>
+			 {% for error in form.address.errors %}
+				<p>{{ error }}</p>
+				{% endfor %}
+	 	</div>
+	 	<div class="form-group">
+	 	  <label class="text"><b>
+	 	  나의 한마디 : &emsp;&emsp;&emsp;</b></label>
+			 <div class="form-name">{{ form.in_short }}</div>
+			 {% for error in form.in_short.errors %}
+				<p>{{ error }}</p>
+				{% endfor %}
+	 	</div>
+	 	<div class="form-group">
+	 	  <label class="text"><b>
+	 	  프로필 사진 : &emsp;&emsp;&emsp;</b></label>
+			 <div class="form-name">{{ form.Photo }}</div>
+			 {% for error in form.Photo.errors %}
+				<p>{{ error }}</p>
+				{% endfor %}
+	 	</div>
+	 	<div class="form-group">
+	 	  <label class="text"><b>
+	 	  휴대폰번호 : &emsp;&emsp;&emsp;</b></label>
+			 <div class="form-name">{{ form.phone_num }}</div>
+			 {% for error in form.phone_num.errors %}
+				<p>{{ error }}</p>
+				{% endfor %}
+				{{form.errors}}
+	 	</div>
+	 	<button type="submit" class="btn btn-primary submit"><b>회원가입</b></button>
+	</form>
+</body>
+</html>

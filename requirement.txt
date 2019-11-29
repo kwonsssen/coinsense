@@ -1,0 +1,14 @@
+beautifulsoup4==4.6.3
+certifi==2018.8.13
+Django==2.0.8
+django-custom-anonymous==0.4
+django-el-pagination==3.2.4
+django-summernote==0.8.8.8
+Pillow==5.2.0
+pytz==2018.5
+wincertstore==0.2
+service-identity==17.0.0
+channels-redis==2.3.0
+
+####응용프로그램 
+redis-server 3.0.503 (window base)

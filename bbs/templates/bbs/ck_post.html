@@ -1,0 +1,13 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block content %}
+<div style="clear: both;border: 1px solid #dcdddd;width:800px;margin-top: -10px;" id="free_board_sub">
+    <form action="" method="POST" >
+        {% csrf_token %}
+        {{form.media}}
+        {{form.as_p}}
+        <input type="submit" value="작성">
+    </form>
+
+</div>
+{% endblock %}

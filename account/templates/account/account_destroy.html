@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% load static%}
+
+
+{% block content %}
+<div class="free_board" style="padding-top: 10px;margin-bottom: 20px;">
+    정말 탈퇴하시겠습니까?
+    <form action="" method="post" >
+            {% csrf_token %}
+            <input style="cursor: pointer;width:75px;height: 25px;font-size: 14px;background-color: #F4F4F7;border: 1px solid black;" type="submit" id="like" value="탈퇴">
+    </form>
+</div>
+{% endblock %}

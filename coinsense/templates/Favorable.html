@@ -1,0 +1,94 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block script%}
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+        function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+    </script>
+    <script type="text/javascript" src="{% static 'Like_Ajax.js' %}"></script>
+{% endblock script %}
+
+{% block content %}
+
+<div id="free_board" class="table" style="padding-top: 10px;margin-bottom: 20px;">
+    <div style="clear:both;padding-top: 10px;margin-bottom: 20px;">
+        <div style="float: left; width:730px;">
+            <h5><b>호재게시판</b></h5>
+        </div>
+    </div>
+
+    <div style="clear: both;">
+        <form style="float: left;margin-right: 120px;" action="" method="">
+            <input id="search_favor" type="text" placeholder="코인명을 검색하세요" name="search">
+            <input id="search_favor_button" type="submit" value="검색">
+        </form>
+        <input data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo" id="search_favor_button" type="submit" value="호재제보">
+    </div>
+
+    <div style="clear: both;width:800px;" id="free_board_sub">
+        {% for favor in favorable %}
+            <table style="width:100%;">
+                <tr style="border: 2px solid #dcdddd;height: 10px;">
+                    <th style="line-height: 50px;border: 2px solid #dcdddd;width:200px;text-align: center;">{{favor.date|date:"Y M d"}}({{favor.date|date:"D"}})</th>
+                    <td style="line-height: 20px;width: 500px;">
+                        <img style="float:left;width:45px;height: 45px;margin-right: 3px;" 
+                        {% if favor.photo %} src="{{favor.photo.url}}"  
+                        {% else %} src="{% static 'no-screenshot.jpg' %}"
+                        {%endif%} >
+                        <b>{{favor.title}}</b><br>{{favor.content}}</td>
+                    <td style="padding-top: 25px;width: 100px;">
+                        <form style="float:left;margin-right: 10px;" action="" method="post" >
+                            <input id="like{{favor.id}}" class="like" style="width:60px;height: 25px;font-size: 14px;background-color: #F4F4F7;border: 1px solid black;" type="submit" name="{{favor.id}}" href="{%url 'bbs:favorable_like'%}" value="좋아요 {{favor.like_count}}">
+                        </form>
+                    </td>
+                </tr>
+            </table>
+            {% endfor %}
+    </div>        
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">호재 제보</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="POST">
+              {% csrf_token %}
+            <div class="form-group">
+              <label for="recipient-name" class="col-form-label">제보자:</label>
+              <input type="text" class="form-control" id="recipient-name">
+            </div>
+            <div class="form-group">
+              <label for="message-text" class="col-form-label">제보내용:</label>
+              <textarea class="form-control" id="message-text"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">제보취소</button>
+          <button type="button" class="btn btn-primary" >제보하기</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

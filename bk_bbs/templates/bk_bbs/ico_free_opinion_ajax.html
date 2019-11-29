@@ -1,0 +1,40 @@
+{% load static %}
+
+{% if not com %}
+    <p>등록된 댓글이 없습니다...</p>
+    <div style="clear: both;width:800px;margin-top: 100px;">
+            <div class="comment_list "style="clear: both;width:800px;margin-top: -10px;padding: 10px 10px 10px 10px;" id="free_board_sub">
+            </div>
+    </div>
+{%else%}
+
+<div style="clear: both;width:800px;margin-top: 100px;">
+    <div class="comment_list "style="clear: both;width:800px;margin-top: -10px;padding: 10px 10px 10px 10px;" id="free_board_sub">
+        {% for comment in comment_list %}
+        <div style="float: left;margin-top: 10px;">
+            <img style="width:50px;height: 50px;" src="{% static 'no-screenshot.jpg' %}">
+            <strong>{{ comment.author }}</strong>
+            <div class="date">
+                {{ comment.created_date.year }}.{{ comment.created_date.month }}.{{ comment.created_date.day }}
+            </div>
+            <p>{{comment.text}} <a href="" style="color:gray;">답변달기</a></p>
+        </div>
+        
+        <button type="button" class="button" style="margin-left: 530px;margin-top: 50px;" data-toggle="modal" data-target="#exampleModalLong2">
+            삭제
+        </button>
+        <hr style="clear: both;">
+        {%endfor%}
+    </div>
+</div>
+{% endif%}
+
+{% if not user.is_authenticated %}
+{%else%}
+
+
+<form method="POST" class="post-form">
+    <span style="float: left;padding-left: 0px;">{{ comment_form.text }}</span>
+    <input class="commit" style="width:120px;height: 40px;background-color: #F4F4F7;border: 1px solid gray;cursor:pointer;" type="submit" href="{% url 'bk:icoRating_comment' post %}"value="등록">
+</form>
+{%endif%}

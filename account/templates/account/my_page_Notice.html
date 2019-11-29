@@ -1,0 +1,22 @@
+{% load static%}
+<div style="margin-top: 20px;" class="my_page_sub_div3">
+	<h3>지난 알림</h3>
+	<table class="table table-striped" style="border-top: 5px solid #444444;border-bottom: 5px solid #444444;margin-top: 20px;">
+		<thead>
+			<tr>
+				<th style="width: 1000px;" scope="row">내용</th>
+				<th scope="row">읽음</th>
+				<th scope="row">일시</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for event in event_list %}
+			<tr>
+				<td>{{event.content}}</td> <!--|truncatechars:20-->
+				<td>{{event.is_read}}</td>
+				<td>{{event.created_at}}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>

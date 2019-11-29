@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<style type="text/css">
+#id_new_post_title, label{
+			display: none;
+}
+</style>
+<h1 style="margin-left: 35px;">{{boardtitle}}</h1>
+
+<form method="post" action="" enctype="multipart/form-data">
+    <div class="input_title" style="float: left !important;">
+    	{% csrf_token %}
+    </div>
+    
+    <div class="input_content">
+        {{ form.title}}
+        {% if form.photo %}
+            {{form.photo}}
+        {% endif %}
+    	{{ form.summer_field|safe }}
+    </div>
+    <br/>
+    <button class="first_input_submit" type="submit">등록</button>
+</form>
+
+{% endblock %}

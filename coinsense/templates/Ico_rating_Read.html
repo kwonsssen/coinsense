@@ -1,0 +1,159 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block script%}
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+        $('#opinion_id_1').click(function(){
+            $('#opinion_id_1').attr('class','opinion_underline opinion');
+            $('#opinion_id_2').attr('class','opinion');
+            $('#opinion_id_3').attr('class','opinion');           
+        });
+        $('#opinion_id_2').click(function(){
+            $('#opinion_id_2').attr('class','opinion_underline opinion');
+            $('#opinion_id_1').attr('class','opinion');
+            $('#opinion_id_3').attr('class','opinion');           
+        });
+        $('#opinion_id_3').click(function(){
+            $('#opinion_id_3').attr('class','opinion_underline opinion');
+            $('#opinion_id_1').attr('class','opinion');
+            $('#opinion_id_2').attr('class','opinion');           
+        });
+    </script>
+        <script>
+                function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        
+            </script>
+    <script src="{%static 'Like_Ajax.js'%}"></script>
+    <script src="{%static 'DisLike_Ajax.js'%}"></script>
+    <script src="{% static 'bk_bbs/ico_colum_ajax.js'%}"></script>
+{% endblock script %}
+
+{% block content %}
+
+<div id="free_board" class="table" style="padding-top: 10px;margin-bottom: 20px;">
+    <div style="clear:both;padding-top: 10px;margin-bottom: 20px;">
+        <div style="float: left; width:730px;">
+            <h5><b>ICO게시판</b></h5>
+        </div>
+    </div>
+
+    <div style="clear: both;width:800px;" id="free_board_sub">
+        <div style="clear: both;border: 1px solid #dcdddd;width:800px;margin-top: -10px;padding: 10px 10px 10px 10px;" id="free_board_sub">
+            <div>
+                <img style="width:170px;height:150px;border: 1px;border-radius: 10px;float: left;" src="{% static 'no-screenshot.jpg' %}">
+                <b><p style="margin-left: 200px;font-size: 30px;height: 165px;">{{ post.title}}</p></b>
+                <hr>
+                {{ post.summer_field|safe }}
+            </div>
+            <div style="display: table; margin: 0 auto;width:400px;margin-bottom: 20px;">
+                <form style="float:left;margin-right: 10px;margin-left: 50px;" action="" method="post" >
+                    <input id="like{{post.id}}"class="like" style="cursor: pointer;width:75px;height: 25px;font-size: 14px;background-color: #F4F4F7;border: 1px solid black;" type="submit" name="{{post.id}}" href="{{like_url}}" value="추천 {{like_count}}">
+                </form>
+                <!--//end 좋아요-->
+
+                <!--싫어요-->
+                <form style="float:left;margin-right: 10px;" action="" method="post" >
+                    <input class="dislike" style="cursor: pointer;width:75px;height: 25px;font-size: 14px;background-color: #F4F4F7;border: 1px solid black;" type="submit" name="{{post.id}}" href="{{dislike_url}}" value="비추천 {{dislike_count}}">
+                </form>
+                <!--//end 싫어요-->
+            </div>
+        </div>
+        <a style="color:black" class="bk_opinion" href="{% url 'bk:bk_ico_read' post.id %}">
+        <div class="opinion opinion_underline" id="opinion_id_1">
+                <p>BK의견</p>
+        </div>
+        </a>
+        <a style="color:black" class="colum_opinion" name="{{post.id}}" href="{% url 'bk:colum_ico_read' post.id %}">
+        <div class="opinion" id="opinion_id_2">
+                <p>칼럼니스트의견</p>
+        </div>
+        </a>
+        <a style="color:black" class="free_opinion" name="{{post.id}}" href="{% url 'bk:icoRating_comment' post.id %}">
+        <div class="opinion free_opinion" id="opinion_id_3">
+                <p>자유의견</p>
+        </div>
+        </a>
+        <div class="ico_opinion">
+        {% if  not bk_condition %}
+            {% if request.user.code == "BK" %}
+            <div >
+                <a class="btn btn-dark max-auto" href="{% url 'bk:bk_ico_create' pk=post.id %}" role="button">BK 의견작성</a>
+            </div>
+            {%endif%}
+            <p>등록된글이 없습니다.</p>
+
+        {% else %}
+        <div style="clear: both;width:800px;margin-top: 100px;">
+            <div style="clear: both;width:800px;margin-top: -10px;padding: 10px 10px 10px 10px;" id="free_board_sub">
+                <div>
+                    <div class="free_board" style="padding-top: 10px;margin-bottom: 20px;">
+                        <h5><b>{{ bk_post.title }}</b></h5>
+                        <div class="free_board_sub">
+                            <h6 class="board_title">{{ bk_post.title }}</h6>
+                            {% if post.author == request.user %}
+                                <a href="{% url 'bk:colum_ico_update' pk=bk_post.id %}"><button class="button">수정</button></a>
+                                <!--모달을 띄운다-->
+                                <button type="button" class="button" data-toggle="modal" data-target="#exampleModalLong">
+                                    삭제
+                                </button>
+                            {% endif %}
+                            <hr style="clear: both;">
+                    
+                            <img style="width:60px;height: 60px;float: left;" 
+                            {% if post.user.Photo %} src="{{bk_post.user.Photo.url}}"  
+                            {% else %} src="{% static 'no-screenshot.jpg' %}"
+                            {%endif%}
+                            >
+                            <p style="float: left;">&ensp;{{ bk_post.user.nickname }}</p>
+                            <p style="float: right;">https://coinsense.com{{ bk_post.path }}</p>
+                            <br>
+                                <div style="clear:both;margin-top: 50px;">{{ bk_post.summer_field|safe }}</div>
+                            <br>
+                            <br>
+                            <br>
+                            <div style="display: table; margin: 0 auto;width:300px;margin-bottom: 20px;">
+                                
+                                <form style="float:left;margin-right: 10px;margin-left: 50px;" action="" method="post" >
+                                    <input id="like{{bk_post.id}}" class="like" style="cursor: pointer;width:75px;height: 25px;font-size: 14px;background-color: #F4F4F7;border: 1px solid black;" type="submit" name="{{bk_post.id}}" href="{{ like_url}}" value="추천 {{bk_post.like_count}}">
+                                </form>
+                                <!--//end 좋아요-->
+                    
+                                <!--싫어요-->
+                                <form style="float:left;margin-right: 10px;" action="" method="post" >
+                                    <input class="dislike" style="cursor: pointer;width:75px;height: 25px;font-size: 14px;background-color: #F4F4F7;border: 1px solid black;" type="submit" name="{{bk_post.id}}" href="{{ dislike_url}}" value="비추천 {{bk_post.dislike_count}}">
+                                </form>
+                                <!--//end 싫어요-->
+                    
+                                <!--신고-->
+                                <form action="" method="post" >
+                                    {% csrf_token %}
+                                    <input style="cursor: pointer;width:75px;height: 25px;font-size: 14px;background-color: #F4F4F7;border: 1px solid black;" type="submit" id="like" value="신고">
+                                </form>
+                                <!--//end신고-->
+                    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {%endif%}
+    </div>        
+</div>
+
+{% endblock %}

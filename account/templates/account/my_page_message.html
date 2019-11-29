@@ -1,0 +1,26 @@
+{% load static%}
+<div style="margin-top: 20px;" class="my_page_sub_div3">
+	<h3>쪽지함</h3>
+	<table class="table table-striped" style="border-top: 5px solid #444444;border-bottom: 5px solid #444444;margin-top: 20px;">
+		<thead>
+			<tr>
+				<th style="width: 800px;" scope="row">보낸사람</th>
+				<th style="width: 2000px;" scope="row">내용</th>
+				<th style="width:2000px"scope="row">작성일</th>
+				<th scope="row">읽음</th>
+				<th scope="row">삭제</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for note in note_list %}
+			<tr>
+				<td scope="row">{{note.send_user}}</th>
+				<td><a href="{% url 'account:note_read' note.pk %}"> {{note.content}}</a></td> <!--|truncatechars:20-->
+				<td>{{note.created_at}}</td>
+				<td>{{note.is_read}}</td>
+				<td><a style="color:black" href="{%url 'account:note_destroy' note.pk%}">삭제</a></td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>

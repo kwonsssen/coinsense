@@ -1,0 +1,48 @@
+{% load static %}
+
+<div style="margin-top: 20px;" class="my_page_sub_div2">
+    <h3>회원정보</h3>
+    <table class="table-striped" style="margin-bottom: 20px;margin-top: 20px;">
+          <tbody style="border-top: 5px solid #444444;border-bottom: 5px solid #444444;">
+            <tr height="100">
+                  <th scope="row">아이디</th>
+                  <td>{{ request.user.username }}</td>
+            </tr>
+            <tr>
+                  <th scope="row">이메일 주소</th>
+                 <td>{{request.user.user_of.email}}</td>
+            </tr>
+            <tr>
+                  <th scope="row">닉네임</th>
+                <td>{{ request.user.nickname }}</td>
+            </tr>
+            <tr>
+                  <th scope="row">프로필사진</th>
+                <td> <img  style="width:100px;height: 100px;" {% if request.user.Photo %} src="{{request.user.Photo.url}}"  
+                    {% else %} src="{% static 'no-screenshot.jpg' %}"
+                    {%endif%} alt="프로필사진"></td>
+            </tr>
+            <tr>
+                  <th scope="row">연락처</th>
+                <td>{{ request.user.user_of.phone_number}}</td>
+            </tr>
+            <tr>
+                  <th scope="row">가입일</th>
+                <td>{{ request.user.date_joined }}</td>
+            </tr>
+            <tr>
+                  <th scope="row">최근 로그인</th>
+                <td>{{ request.user.last_login }}</td>
+            </tr>
+            <tr>
+                  <th scope="row">나의 한마디</th>
+                <td>{{ request.user.in_short }}</td>
+            </tr>
+          </tbody>
+    </table>
+    <div class="my_page_button">
+        <a href="">회원정보 변경</a>
+        <a href="">비밀번호 변경</a>
+        <a href="">탈퇴</a>
+    </div>
+</div>

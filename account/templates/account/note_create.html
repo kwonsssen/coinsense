@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<style type="text/css">
+#id_new_post_title, label{
+			display: none;
+}
+</style>
+<h1 style="margin-left: 35px;">쪽지 보내기</h1>
+
+<form method="post" action="">
+    <div class="input_title" style="float: left !important;">
+    	{% csrf_token %}
+    </div>
+    
+    <div class="input_content">
+        {{form.as_p}}
+    </div>
+    <br/>
+    <button class="first_input_submit" type="submit">보내기</button>
+</form>
+<script>
+
+
+
+</script>
+{% endblock %}

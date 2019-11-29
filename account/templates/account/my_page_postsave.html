@@ -1,0 +1,25 @@
+
+{% load static%}
+<div style="margin-top: 20px;" class="my_page_sub_div3">
+	<h3>저장한 게시글</h3>
+	<table class="table table-striped" style="border-top: 5px solid #444444;border-bottom: 5px solid #444444;margin-top: 20px;">
+		<thead>
+			<tr>
+				<th style="width: 1000px;" scope="row">게시판</th>
+				<th style="width: 2000px;" scope="row">제목</th>
+				<th scope="row">작성자</th>
+				<th scope="row">작성일</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for bookmark in bookmark_list %}
+			<tr>
+				<td scope="row">{{bookmark.post.get_board_name}}</th>
+				<td><a style="color:black;" href="{{bookmark.post.get_absolute_url }}">{{bookmark.post.title}}</a></td> 
+				<td>{{bookmark.post.author}}</td>
+				<td>{{bookmark.post.created_at}}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>

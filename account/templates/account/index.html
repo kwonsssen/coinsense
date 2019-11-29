@@ -1,0 +1,81 @@
+{% extends "layout.html" %}
+
+{% block content %}
+		<div id="board">
+			<div>
+				<li style="width:130px;text-align: center;"><a href="{% url 'bbs:free_list' %}">자유게시판</a></li>
+				<li style="width:130px;text-align: center;"><a href="">시황분석</a></li>
+				<li style="width:130px;text-align: center;"><a href="">차트분석</a></li>
+				<li style="width:130px;text-align: center;"><a href="">정보공유/팁</a></li>
+				<li style="width:130px;text-align: center;"><a href="">코인포럼</a></li>
+				
+			</div>
+			<div style="overflow-x:hidden; overflow-y:scroll;width: 800px;height: 290px;">
+			<table>
+				
+		  		
+			 	<tbody id="tbody">
+			 		{% for post in post_list %}
+			  		<tr>
+			    		<td style="" id="table_1"><a style="display: inline-block; white-space: nowrap; overflow: hidden;text-overflow: ellipsis; width:480px;text-overflow:clip;margin-left: 10px;margin-right:10px;text-decoration: none;color:black;" href="{% url 'bbs:free_read' pk=post.pk %}">{{post.title}}</a></td>
+			    		<td id="table_2">{{post.author}}</td>
+			    		<td>{{ post.updated_at|date:"c"|slice:":10" }} {{ post.updated_at|date:"c"|slice:"11:16" }}</td>
+			    	</tr>
+			    	{% endfor %}
+			  	</tbody>
+			  	
+			</table>
+			</div>
+		</div>
+	<div id="board_photo">
+		<div>
+			<li>갤러리</li>
+			
+		</div>
+		<div style="clear: both;margin-left: 10px;">
+			<div style="width: 155px;float: left;">
+				<img style="width:110px;height: 100px;" src="/media/photoex.gif">
+				<p style="text-align: center;">사진입니다.</p>
+			</div>
+			<div style="width: 155px;float: left;">
+				<img style="width:110px;height: 100px;" src="/media/photoex.gif">
+				<p style="text-align: center;">사진입니다.</p>
+			</div>
+			<div style="width: 155px;float: left;">
+				<img style="width:110px;height: 100px;" src="/media/photoex.gif">
+				<p style="text-align: center;">사진입니다.</p>
+			</div>
+			<div style="width: 155px;float: left;">
+				<img style="width:110px;height: 100px;" src="/media/photoex.gif">
+				<p style="text-align: center;">사진입니다.</p>
+			</div>
+			<div style="width: 155px;float: left;">
+				<img style="width:110px;height: 100px;" src="/media/photoex.gif">
+				<p style="text-align: center;">사진입니다.</p>
+			</div>
+			<div style="width: 155px;float: left;">
+				<img style="width:110px;height: 100px;" src="/media/photoex.gif">
+				<p style="text-align: center;">사진입니다.</p>
+			</div>
+			<div style="width: 155px;float: left;">
+				<img style="width:110px;height: 100px;" src="/media/photoex.gif">
+				<p style="text-align: center;">사진입니다.</p>
+			</div>
+			<div style="width: 155px;float: left;">
+				<img style="width:110px;height: 100px;" src="/media/photoex.gif">
+				<p style="text-align: center;">사진입니다.</p>
+			</div>
+			<div style="width: 155px;float: left;">
+				<img style="width:110px;height: 100px;" src="/media/photoex.gif">
+				<p style="text-align: center;">사진입니다.</p>
+			</div>
+			<div style="width: 155px;float: left;">
+				<img style="width:110px;height: 100px;" src="/media/photoex.gif">
+				<p style="text-align: center;">사진입니다.</p>
+			</div>
+		</div>
+		
+		
+	</div>
+{% endblock %}
+<!-- ############################################################################# -->

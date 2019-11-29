@@ -1,0 +1,62 @@
+<div style="clear: both;border: 1px solid #dcdddd;width:800px;margin-top: -10px;" id="free_board_sub">
+    <table>
+        <thead class="thead-light">
+            <tr>
+                <th style="width:150px;">닉네임</th>
+                <th style="width:200px;">이름</th>
+                <th style="width:215px;">학과</th>
+                <th style="width:100px;">학번</th>
+                <th style="width:100px;">승인</th>
+                <th style="width:100px;">거절</th>
+            </tr>
+        </thead>
+        
+        <!-- 공지사항 -->
+        <tbody>
+        {% for user in user_list %}
+        <tr>
+            <td style="">{{ user.user.nickname }}</td>
+            <td style="">{{ user.username }}</a></td>
+            <td style="">{{ user.department }}</td>
+            <td>{{user.unv_number}}</td>
+            <td style=""><a class="accept" style="color:black" href="{% url accept_url %}" name="{{user.user.pk}}">승인</a></td>
+            <td style=""><a class="reject" style="color:black" href="{% url reject_url %}" name="{{user.user.pk}}">거절</a></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="post_num" style="width:800px;">
+    <div style="display: table; margin-left: auto; margin-right: auto;padding-top: 3%;">
+        <div class='col-log-12'>
+            <ul class="pagination pagination-lg col-lg-12 col-md-12" style="margin-left: 20px;">
+            {% if user_list.has_previous %}
+                <li>
+                    <a class="page_previous" style="color:black" href="?page={{ user_list.previous_page_number }}" aria-label="Previous">
+                      이전&ensp;
+                    </a>
+                </li>
+            {% else %}
+            {% endif %}
+          
+            {% for i in user_list.paginator.page_range %}
+            <!--현재페이지-->
+            {% if user_list.number == i %}
+                <li class="active" style="font-size: 20px;line-height: 25px;"><a style="color:black" href="#"><b>&ensp;{{i}}&ensp;</b></a></li>
+            {% else %}
+                <li><a class="page_choice" style="color:black" href="?page={{i}}">&ensp;{{i}}&ensp;</a></li>
+            {% endif %}
+            {% endfor %}
+                  
+            {% if user_list.has_next %}
+                <li><a class="next_page" style="color:black" href="?page={{ user_list.next_page_number }}" aria-label="Next">&ensp;다음</i></a></li>
+            {% else %}  
+            {% endif %}
+            </ul><!--/.pagination-->
+        </div>
+    </div>
+</div>
+<form action="" method="get">
+    <input style="width:300px;margin-top: 20px;margin-left: 240px;border: 1px solid #383838;" type="text" name="search" value="{{ q }}">
+    <input style="background-color: #F4F4F7;border: 1px solid #383838;"type="submit" value="검색">
+</form>

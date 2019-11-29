@@ -1,0 +1,119 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{%block script%}
+<script type="text/javascript" src="{% static 'bbs/society_request_list_ajax.js' %}"></script>
+<script type="text/javascript" src="{% static 'bbs/society_request_pagination.js' %}"></script>
+<script type="text/javascript" src="{% static 'bbs/society_request_accept_ajax.js' %}"></script>
+<script type="text/javascript" src="{% static 'bbs/society_approval_request_ajax.js' %}"></script>
+{% endblock%}
+{% block content %}
+
+
+<div id="free_board" class="table" style="padding-top: 10px;margin-bottom: 20px;">
+    <div style="clear:both;padding-top: 10px;margin-bottom: 20px;">
+        {% if not permission %}
+        <div style="float: left; width:715px;">
+        {% else %}
+        <div style="float: left; width:640px;">
+        {% endif %}
+            <h5><b>{{boardtitle}}</b></h5>
+        </div>
+        <div style="float:left;">
+            {% if permission %}
+                {% if reuqest.user.code == post_list.0.get_code or request.user.code == "BK" %}
+                <a class="approval_list" style="color: #383838;border: 1px solid #383838;padding-left: 10px;padding-right: 10px;" href="{{approval_list}}"><b class="request_text">승인목록</b></a>
+                {%endif%}
+                <a style="color: #383838;border: 1px solid #383838;padding-left: 10px;padding-right: 10px;" href="{{url}}"><b>글쓰기</b></a>
+            {% else %}
+                {% if request.user.is_authenticated %}
+                    {% if check_r %}
+                    
+                    <a class="approval_request"style="color: #383838;border: 1px solid #383838;padding-left: 10px;padding-right: 10px;" href="#"><b >권한요청</b></a>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+            
+            
+        </div>
+    </div>
+    <div class="post_list">
+    <div style="clear: both;border: 1px solid #dcdddd;width:800px;margin-top: -10px;" id="free_board_sub">
+        <table>
+            <thead class="thead-light">
+                <tr>
+                    <th style="width:100px;">글번호</th>
+                    <th style="width:370px;">제목</th>
+                    <th style="width:170px;">작성자</th>
+                    <th style="width:75px;">작성일</th>
+                    <th style="width:75px;">조회</th>
+                    <th style="width:75px;">추천</th>
+                </tr>
+            </thead>
+            
+            <!-- 공지사항 -->
+            <tbody>       
+              
+            {% for notice in notice_list %}
+                <tr>
+                    <td>공지</td>
+                    <td><a style="color:black" href="{% url 'bbs:notice' pk=notice.id %}">{{ notice.title }}</a></td>
+                    <td>관리자</td>
+                    <td>{{ notice.updated_at.year }}.{{ notice.updated_at.month }}.{{ notice.updated_at.day }}</td>
+                    <td>{{notice.views}}</td>
+                    <td></td>
+                </tr>
+            {% endfor %} 
+
+            {% for post in post_list %}
+                <tr>
+                    <td style="">{{ post.id }}</td>
+                    <td style=""><a href="{%url read_url post.id %}" style="display: inline-block; white-space: nowrap; overflow: hidden;text-overflow: ellipsis; width:305px;text-overflow:clip;margin-left: -10px;margin-right:10px;text-decoration: none;color:black;">{{ post.title }}</a></td>
+                    <td style="">{{ post.author }}</td>
+                    <td>{{ post.updated_at.year }}.{{ post.updated_at.month }}.{{ post.updated_at.day }}</td>
+                    <td style="">{{post.views}}</td>
+                    <td style="">
+                            {{post.like_count}}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="post_num" style="width:800px;">
+        <div style="display: table; margin-left: auto; margin-right: auto;padding-top: 3%;">
+            <div class='col-log-12'>
+                <ul class="pagination pagination-lg col-lg-12 col-md-12" style="margin-left: 20px;">
+                {% if post_list.has_previous %}
+                    <li>
+                        <a style="color:black" href="?page={{ post_list.previous_page_number }}" aria-label="Previous">
+                          이전&ensp;
+                        </a>
+                    </li>
+                {% else %}
+                {% endif %}
+              
+                {% for i in post_list.paginator.page_range %}
+                <!--현재페이지-->
+                {% if post_list.number == i %}
+                    <li class="active" style="font-size: 20px;line-height: 25px;"><a style="color:black" href="#"><b>&ensp;{{i}}&ensp;</b></a></li>
+                {% else %}
+                    <li><a style="color:black" href="?page={{i}}">&ensp;{{i}}&ensp;</a></li>
+                {% endif %}
+                {% endfor %}
+                      
+                {% if post_list.has_next %}
+                    <li><a  style="color:black" href="?page={{ post_list.next_page_number }}" aria-label="Next">&ensp;다음</i></a></li>
+                {% else %}  
+                {% endif %}
+                </ul><!--/.pagination-->
+            </div>
+        </div>
+    </div>
+    <form action="" method="get">
+        <input style="width:300px;margin-top: 20px;margin-left: 240px;border: 1px solid #383838;" type="text" name="search" value="{{ q }}">
+        <input style="background-color: #F4F4F7;border: 1px solid #383838;"type="submit" value="검색">
+    </form>
+    </div>
+</div>
+{% endblock %}
